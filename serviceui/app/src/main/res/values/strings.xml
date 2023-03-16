@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">service-ui</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="crops_app_name">iCrops</string>
+    <string name="shr_hint_username">Username</string>
+    <string name="crops_username">Username</string>
+    <string name="crops_password">Password</string>
+    <string name="crops_button_next">Next</string>
+    <string name="crops_button_cancel">Cancel</string>
+    <string name="crops_empty_username">Username cannot be empty</string>
+    <string name="crops_empty_password">Password cannot be empty</string>
+    <string name="crops_invalid_credentials">Invalid credentials</string>
+    <string name="r_search_title" />
+    <string name="crops_search">Search</string>
+    <string name="crops_filter">Filter</string>
+    <string name="crops_product_title">Product</string>
+    <string name="crops_product_description">Description</string>
+    <string name="product_title">Product</string>
+    <string name="setup_supermarket_title">Select a convenient supermarket of your choice</string>
+
+</resources>
