@@ -1,10 +1,7 @@
 package com.example.servicebackend.controller;
 
 import com.example.servicebackend.constants.Response;
-import com.example.servicebackend.dto.actor.Customer;
-import com.example.servicebackend.dto.actor.Supplier;
-import com.example.servicebackend.dto.actor.User;
-import com.example.servicebackend.dto.actor.UserValidationDTO;
+import com.example.servicebackend.dto.actor.*;
 import com.example.servicebackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +15,43 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/user")
-    public ResponseEntity createUser(@RequestBody User user) {
-        Response response = userService.createUser(user);
+    @PostMapping("/user/customer")
+    public ResponseEntity createCustomer(@RequestBody Customer customer) {
+        Response response = userService.createCustomer(customer);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity getUserByUserId(@PathVariable String userId) {
-        User user = userService.getUserByUserId(userId);
-        return ResponseEntity.ok(user);
+    @PatchMapping("/user/customer/{userId}")
+    public ResponseEntity updateCustomer(@PathVariable String userId,
+                                         @RequestBody Customer customer) {
+        Response response = userService.updateCustomer(customer, userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/user/supplier")
+    public ResponseEntity createSupplier(@RequestBody Supplier supplier) {
+        Response response = userService.createSupplier(supplier);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/user/supplier/{userId}")
+    public ResponseEntity updateSupplier(@PathVariable String userId,
+                                         @RequestBody Supplier supplier) {
+        Response response = userService.updateSupplier(supplier, userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/user/manager")
+    public ResponseEntity createManager(@RequestBody Manager manager) {
+        Response response = userService.createManager(manager);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/user/manager/{userId}")
+    public ResponseEntity updateManager(@PathVariable String userId,
+                                         @RequestBody Manager manager) {
+        Response response = userService.updateManager(manager, userId);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/user/validate")
@@ -37,9 +61,4 @@ public class UserController {
         return ResponseEntity.ok(userValidationDTO);
     }
 
-    @PatchMapping("/user/customer/{userId}")
-    public ResponseEntity updateCustomer(@RequestBody Customer customer) {
-        Response response = userService.updateCustomer(customer);
-        return ResponseEntity.ok(response);
-    }
 }

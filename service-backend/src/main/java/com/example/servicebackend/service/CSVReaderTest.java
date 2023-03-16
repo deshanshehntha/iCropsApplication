@@ -12,12 +12,10 @@ import com.example.servicebackend.dto.Supermarket;
 import com.example.servicebackend.dto.SupermarketSupplierRelationship;
 import com.example.servicebackend.dto.SupplierProductRelationship;
 import com.example.servicebackend.dto.actor.Supplier;
-import com.example.servicebackend.dto.actor.User;
 import com.example.servicebackend.dto.product.Product;
 import com.example.servicebackend.dto.product.ProductReaderDTO;
 import com.opencsv.*;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -73,12 +71,12 @@ public class CSVReaderTest {
     private Map<String, String>  createSuppliers(List<String> suppliers) {
         Map<String, String> nameToSupplierIdMap = new HashMap<>();
         for (String name: suppliers) {
-            User supplier = new Supplier();
+            Supplier supplier = new Supplier();
             supplier.setName(name);
             supplier.setPassword("123@");
             supplier.setUserName(name);
             supplier.setUserType(UserType.SUPPLIER);
-            Response response = userService.createUser(supplier);
+            Response response = userService.createSupplier(supplier);
             Logger.getGlobal().log(Level.INFO, response.getId());
             nameToSupplierIdMap.put(name, response.getId());
         }
