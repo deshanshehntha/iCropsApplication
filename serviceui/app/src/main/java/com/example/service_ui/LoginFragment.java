@@ -51,9 +51,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-
                 ((NavigationHost) getActivity())
-                        .navigateTo(new SetupSupermarket(), false);
+                        .navigateTo(new ProductFragment(), false);
 
 //                Editable username = usernameInputText.getText();
 //                Editable password = passwordInputText.getText();
@@ -114,13 +113,20 @@ public class LoginFragment extends Fragment {
                             user = response;
                             String requestStatus = user.getString("requestStatus");
                             if (requestStatus.equals("SUCCESS")) {
+                                String userId = user.getString("userId");
+                                String userType = user.getString("userType");
+                                String name = user.getString("name");
 
-                                Bundle result = new Bundle();
-                                result.putString("bundleKey", "result");
-                                getParentFragmentManager().setFragmentResult("requestKey", result);
+                                if ("CUSTOMER".equals(userType)) {
+                                    SetupSupermarketFragment setupSupermarketFragment = new SetupSupermarketFragment();
 
-                                ((NavigationHost) getActivity())
-                                        .navigateTo(new SetupSupermarket(), false);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("userId", userId);
+                                    setupSupermarketFragment.setArguments(bundle);
+
+                                    ((NavigationHost) getActivity())
+                                            .navigateTo(setupSupermarketFragment, false);
+                                }
                             } else {
                                 passwordInput.setError(getString(R.string.crops_invalid_credentials));
                             }

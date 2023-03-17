@@ -12,6 +12,5 @@ public class UserValidationDTO {
     private String externalIdentifier;
     private UserType userType;
     private RequestStatus requestStatus;
-    private String preferredSupermarket;
 
 }

@@ -6,6 +6,7 @@ import com.example.servicebackend.constants.UserType;
 import com.example.servicebackend.dto.Supermarket;
 import com.example.servicebackend.dto.SupermarketSupplierRelationship;
 import com.example.servicebackend.dto.SupplierProductRelationship;
+import com.example.servicebackend.dto.actor.Supplier;
 import com.example.servicebackend.dto.actor.User;
 import com.example.servicebackend.dto.product.Product;
 import com.example.servicebackend.repository.ProductRepository;
@@ -13,9 +14,11 @@ import com.example.servicebackend.repository.SupplierProductRelationshipReposito
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -66,23 +69,22 @@ public class ProductService {
 
     public List<Product> getProductBySupermarketId(String supermarketId) {
 
-        Supermarket supermarket = supermarketService.getSupermarketById(supermarketId);
-        List<SupermarketSupplierRelationship> suppliers = supermarket.getSuppliers();
+        List<String> supplierIds = supermarketService.getSupplierIdsBySupermarketId(supermarketId);
 
-        List<Product> productList =  new ArrayList<>();
+        if (!CollectionUtils.isEmpty(supplierIds)) {
+            List<SupplierProductRelationship> supplierProductRelationships =
+                    supplierProductRelationshipRepository.getProductIdsBySupplierIds(supplierIds);
 
-        for (SupermarketSupplierRelationship supplier: suppliers) {
-            List<SupplierProductRelationship> supplierProductRelationships = supplierProductRelationshipRepository
-                    .getSupplierProductRelationshipBySupplierId(supplier.getSupplierId());
+            if (!CollectionUtils.isEmpty(supplierProductRelationships)) {
+                List<String> productIds = supplierProductRelationships.stream().map(SupplierProductRelationship::getProductId)
+                        .collect(Collectors.toList());
 
-            for (SupplierProductRelationship supplierProductRelationship: supplierProductRelationships) {
-                Product product = productRepository
-                        .getProductByProductId(supplierProductRelationship.getProductId());
-                productList.add(product);
+                if (!CollectionUtils.isEmpty(productIds)) {
+                    return productRepository.getProductsByProductIds(productIds);
+                }
             }
         }
-
-        return productList;
+        return null;
     }
 
     private void cloneProduct(Product clonedProduct, Product receivedProduct) {
@@ -100,8 +102,8 @@ public class ProductService {
             return "Supplier id compulsory";
         }
 
-        User supplier =
-                userService.getUserByUserIdAndType(product.getSupplier().getSupplierId(), UserType.SUPPLIER);
+        Supplier supplier =
+                userService.getSupplierByUserId(product.getSupplier().getSupplierId());
 
         if (supplier == null) {
             return "Invalid supplier id";

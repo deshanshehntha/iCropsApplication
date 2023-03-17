@@ -28,6 +28,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/user/customer/{userId}")
+    public ResponseEntity getCustomer(@PathVariable String userId) {
+        Customer customer = userService.getCustomerByUserId(userId);
+        return ResponseEntity.ok(customer);
+    }
+
     @PostMapping("/user/supplier")
     public ResponseEntity createSupplier(@RequestBody Supplier supplier) {
         Response response = userService.createSupplier(supplier);

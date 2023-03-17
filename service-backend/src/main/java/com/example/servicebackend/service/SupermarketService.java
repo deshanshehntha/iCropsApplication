@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -63,6 +64,20 @@ public class SupermarketService {
         supermarket.setSuppliers(supermarketSupplierRelationshipRepository
                 .findSupermarketSupplierRelationshipsBySupermarketId(supermarket.getSupermarketId()));
         return supermarket;
+    }
+
+    public List<String> getSupplierIdsBySupermarketId(String supermarketId) {
+
+        List<SupermarketSupplierRelationship> relationships =
+                supermarketSupplierRelationshipRepository.findSupplierIdsBySupermarketId(supermarketId);
+
+        if (!CollectionUtils.isEmpty(relationships)) {
+            return relationships.stream()
+                    .map(SupermarketSupplierRelationship::getSupplierId)
+                    .collect(Collectors.toList());
+        }
+
+        return null;
     }
 
     public List<Supermarket> getAllSupermarkets() {
