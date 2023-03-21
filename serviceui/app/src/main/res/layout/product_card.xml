@@ -38,6 +38,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/crops_product_description"
                 android:textAppearance="?attr/textAppearanceBody2" />
+
+<!--            <com.google.android.material.checkbox.MaterialCheckBox-->
+<!--                android:id="@+id/checkbox_test"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Buy"-->
+<!--                />-->
+
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

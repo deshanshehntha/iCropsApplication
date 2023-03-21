@@ -27,12 +27,14 @@ public class ProductEntry {
     public final String url;
     public final String price;
     public final String description;
+    public final String productId;
 
     public ProductEntry(
-            String title, String url, String price, String description) {
+            String title, String url, String price, String description, String productId) {
         this.title = title;
         this.url = url;
         this.price = price;
         this.description = description;
+        this.productId = productId;
     }
 }

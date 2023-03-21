@@ -1,17 +1,22 @@
 package com.example.service_ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -21,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.service_ui.constants.UriConstants;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -33,7 +39,6 @@ import java.util.List;
 
 public class ProductFragment extends Fragment {
     private RequestQueue requestQueue;
-
     private List<ProductEntry> products;
 
     @Override
@@ -47,6 +52,7 @@ public class ProductFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
+        //Add supermarket products here
         String preferredSupermarketId = "641367ea3a921d2f1fb91e0f";
 
         View view = inflater.inflate(R.layout.fragment_product, container, false);
@@ -97,7 +103,8 @@ public class ProductFragment extends Fragment {
                             ProductEntry productEntry = new ProductEntry(
                                     linkedTreeMap.get("productName").toString(),url,
                                     linkedTreeMap.get("price").toString(),
-                                    null
+                                    null,
+                                    linkedTreeMap.get("productId").toString()
                             );
                             products.add(productEntry);
                         }

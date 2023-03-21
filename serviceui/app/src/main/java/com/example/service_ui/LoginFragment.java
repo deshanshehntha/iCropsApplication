@@ -54,9 +54,9 @@ public class LoginFragment extends Fragment {
                 ((NavigationHost) getActivity())
                         .navigateTo(new ProductFragment(), false);
 
-//                Editable username = usernameInputText.getText();
-//                Editable password = passwordInputText.getText();
-//
+                Editable username = usernameInputText.getText();
+                Editable password = passwordInputText.getText();
+
 //                if (isEmptyInputs(username, password)) {
 //                    passwordInput.setError(getString(R.string.crops_empty_password));
 //                    usernameInput.setError(getString(R.string.crops_empty_username));
