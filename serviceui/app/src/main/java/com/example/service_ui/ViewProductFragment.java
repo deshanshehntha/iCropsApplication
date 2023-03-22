@@ -4,54 +4,38 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ViewProductFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.service_ui.constants.UriConstants;
+import com.google.gson.Gson;
+
+import java.util.List;
+
 public class ViewProductFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String productId;
 
     public ViewProductFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewProductFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ViewProductFragment newInstance(String param1, String param2) {
-        ViewProductFragment fragment = new ViewProductFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            productId = getArguments().getString("productId");
         }
     }
 
@@ -59,6 +43,54 @@ public class ViewProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_product, container, false);
+        View view = inflater.inflate(R.layout.fragment_view_product, container, false);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
+
+        String url = UriConstants.HOST + UriConstants.PRODUCT_URI + "/" + productId;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Gson gson = new Gson();
+                        ProductEntry productEntry = gson.fromJson(response, ProductEntry.class);
+                        TextView productTitle = view.findViewById(R.id.product_title_view);
+                        productTitle.setText(productEntry.productName);
+
+                        TextView productDescription = view.findViewById(R.id.product_description_view);
+
+                        if (productEntry.description != null &&
+                                !productEntry.description.isEmpty()) {
+                            try {
+                                List<String> descriptions = gson.fromJson(productEntry.description, List.class);
+                                productDescription.setText(descriptions.get(0));
+                            } catch (Exception e) {
+                                Log.d("Error", e.getLocalizedMessage());
+                                productDescription.setText(productEntry.description);
+                            }
+
+                        }
+
+                        TextView price = view.findViewById(R.id.product_price_view);
+                        price.setText(productEntry.price);
+
+                        List<String> urls = gson.fromJson(productEntry.imageLink, List.class);
+                        String url = urls.isEmpty() ? null : urls.get(0);
+
+                        NetworkImageView image = view.findViewById(R.id.product_image);
+                        ImageRequester imageRequester = ImageRequester.getInstance();
+                        imageRequester.setImageFromUrl(image, url);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        requestQueue.add(request);
+
+
+        return view;
     }
 }

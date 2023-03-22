@@ -1,15 +1,12 @@
 package com.example.service_ui;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.List;
 
@@ -20,17 +17,19 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
 
     private List<ProductEntry> productList;
     private ImageRequester imageRequester;
+    private FragmentActivity fragmentActivity;
 
-    ProductCardRecyclerViewAdapter(List<ProductEntry> productList) {
+    ProductCardRecyclerViewAdapter(List<ProductEntry> productList, FragmentActivity fragmentActivity) {
         this.productList = productList;
         imageRequester = ImageRequester.getInstance();
+        this.fragmentActivity = fragmentActivity;
     }
 
     @NonNull
     @Override
     public ProductCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
-        return new ProductCardViewHolder(layoutView);
+        return new ProductCardViewHolder(layoutView, this.fragmentActivity);
     }
 
 
@@ -38,9 +37,10 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
     public void onBindViewHolder(@NonNull ProductCardViewHolder holder, int position) {
         if (productList != null && position < productList.size()) {
             ProductEntry product = productList.get(position);
-            holder.productTitle.setText(product.title);
+            holder.productTitle.setText(product.productName);
             holder.productPrice.setText(product.price);
-            imageRequester.setImageFromUrl(holder.productImage, product.url);
+            holder.productId = product.productId;
+            imageRequester.setImageFromUrl(holder.productImage, product.imageLink);
         }
     }
 
