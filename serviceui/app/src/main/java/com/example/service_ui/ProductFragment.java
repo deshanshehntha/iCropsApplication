@@ -27,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.service_ui.constants.UriConstants;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -57,6 +58,11 @@ public class ProductFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_product, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.fab);
+        if (!OrderedProductHolder.getInstance().getOrderLines().isEmpty()) {
+            floatingActionButton.setImageResource(R.drawable.full_cart_foreground);
+        }
 
         setUpToolbar(view);
 
