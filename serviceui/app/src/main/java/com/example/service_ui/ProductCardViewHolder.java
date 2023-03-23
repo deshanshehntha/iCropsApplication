@@ -40,8 +40,8 @@ public class ProductCardViewHolder extends RecyclerView.ViewHolder {
                                 .beginTransaction()
                                 .replace(R.id.container, viewProductFragment);
 
-                if (false) {
-                    transaction.addToBackStack(null);
+                if (true) {
+                    transaction.addToBackStack("productView");
                 }
 
                 transaction.commit();

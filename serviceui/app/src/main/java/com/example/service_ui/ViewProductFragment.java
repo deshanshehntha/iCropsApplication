@@ -5,9 +5,11 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -18,6 +20,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.service_ui.constants.UriConstants;
+import com.example.service_ui.model.OrderLine;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -64,10 +68,17 @@ public class ViewProductFragment extends Fragment {
                                 !productEntry.description.isEmpty()) {
                             try {
                                 List<String> descriptions = gson.fromJson(productEntry.description, List.class);
-                                productDescription.setText(descriptions.get(0));
+                                if (descriptions.get(0).toCharArray().length > 100) {
+                                    String substring = descriptions.get(0).substring(0,100) + "...";
+                                    productDescription.setText(substring);
+                                }
+
                             } catch (Exception e) {
                                 Log.d("Error", e.getLocalizedMessage());
-                                productDescription.setText(productEntry.description);
+                                if (productEntry.description.toCharArray().length > 100) {
+                                    String substring = productEntry.description.substring(0,100) + "...";
+                                    productDescription.setText(substring);
+                                }
                             }
 
                         }
@@ -81,6 +92,23 @@ public class ViewProductFragment extends Fragment {
                         NetworkImageView image = view.findViewById(R.id.product_image);
                         ImageRequester imageRequester = ImageRequester.getInstance();
                         imageRequester.setImageFromUrl(image, url);
+
+                        EditText qtyText = view.findViewById(R.id.product_quantity_view);
+
+
+                        MaterialButton button = view.findViewById(R.id.add_to_cart);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                OrderLine orderLine = new OrderLine();
+                                orderLine.setProductId(productEntry.productId);
+                                orderLine.setQuantity(qtyText.getText().toString());
+                                OrderedProductHolder.getInstance()
+                                        .setOrderLine(orderLine);
+                            }
+                        });
+
                     }
                 }, new Response.ErrorListener() {
             @Override

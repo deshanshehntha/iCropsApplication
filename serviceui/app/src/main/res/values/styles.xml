@@ -15,23 +15,23 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="Widget.Shrine.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="hintTextAppearance">@style/TextAppearance.Shrine.TextInputLayout.HintText</item>
+    <style name="Widget.Crops.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/TextAppearance.Crops.TextInputLayout.HintText</item>
         <item name="hintTextColor">@color/textColorPrimary</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="boxStrokeColor">@color/textInputOutlineColor</item>
     </style>
 
-    <style name="Widget.Shrine.Button" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.Crops.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="backgroundTint">?attr/colorPrimaryDark</item>
     </style>
 
-    <style name="Widget.Shrine.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="Widget.Crops.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="TextAppearance.Shrine.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="TextAppearance.Crops.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 

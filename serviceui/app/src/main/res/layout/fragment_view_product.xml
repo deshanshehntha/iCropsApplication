@@ -21,58 +21,93 @@
             tools:visibility="visible" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="?attr/colorPrimaryDark"
-        app:cardCornerRadius="4dp">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_height="360dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp">
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/product_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/colorPrimaryDark"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/product_title_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:text="@string/crops_product_title"
-                android:textAppearance="?attr/textAppearanceHeadline6" />
+                android:layout_gravity="bottom"
+                android:background="#FFFFFF"
+                android:orientation="vertical"
+                android:padding="8dp">
 
-            <TextView
-                android:id="@+id/product_description_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:text="@string/crops_product_description"
-                android:textAppearance="?attr/textAppearanceBody2" />
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/product_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="?attr/colorPrimaryDark"
+                    android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/product_price_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:text="@string/product_price"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@color/teal_700"
-                android:textFontWeight="10" />
+                <TextView
+                    android:id="@+id/product_title_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="@string/crops_product_title"
+                    android:textAppearance="?attr/textAppearanceHeadline6" />
 
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/product_description_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="@string/crops_product_description"
+                    android:textAppearance="?attr/textAppearanceBody2" />
+
+                <TextView
+                    android:id="@+id/product_price_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="@string/product_price"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/teal_700"
+                    android:textFontWeight="10" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/product_quantity_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="numberSigned"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:hint="Qty"
+                        />
+
+                    <Button
+                        android:id="@+id/add_to_cart"
+                        style="@style/Widget.Crops.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add to Cart"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/editTextNumberSigned"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </ScrollView>
 
 </FrameLayout>

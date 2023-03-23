@@ -26,9 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_launcher_background"
+        android:layout_margin="16dp"
+        app:tint="@null"
         android:contentDescription="Submit"
-        android:layout_margin="16dp" />
+        app:maxImageSize="32dp"
+        android:src="@mipmap/empty_cart_round" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
