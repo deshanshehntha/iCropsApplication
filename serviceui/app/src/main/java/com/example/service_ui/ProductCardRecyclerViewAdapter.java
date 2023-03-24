@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.service_ui.model.Product;
+
 import java.util.List;
 
 /**
@@ -15,11 +17,11 @@ import java.util.List;
  */
 public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<ProductCardViewHolder> {
 
-    private List<ProductEntry> productList;
+    private List<Product> productList;
     private ImageRequester imageRequester;
     private FragmentActivity fragmentActivity;
 
-    ProductCardRecyclerViewAdapter(List<ProductEntry> productList, FragmentActivity fragmentActivity) {
+    ProductCardRecyclerViewAdapter(List<Product> productList, FragmentActivity fragmentActivity) {
         this.productList = productList;
         imageRequester = ImageRequester.getInstance();
         this.fragmentActivity = fragmentActivity;
@@ -36,7 +38,7 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
     @Override
     public void onBindViewHolder(@NonNull ProductCardViewHolder holder, int position) {
         if (productList != null && position < productList.size()) {
-            ProductEntry product = productList.get(position);
+            Product product = productList.get(position);
             holder.productTitle.setText(product.productName);
             holder.productPrice.setText(product.price);
             holder.productId = product.productId;

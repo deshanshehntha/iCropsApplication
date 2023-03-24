@@ -1,5 +1,8 @@
 package com.example.service_ui;
 
+import static com.example.service_ui.constants.Constants.SHARED_PREF_SUPERMARKET_ID;
+import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_TYPE;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -7,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -40,10 +44,7 @@ public class ProductCardViewHolder extends RecyclerView.ViewHolder {
                                 .beginTransaction()
                                 .replace(R.id.container, viewProductFragment);
 
-                if (true) {
-                    transaction.addToBackStack("productView");
-                }
-
+                transaction.addToBackStack("product_view");
                 transaction.commit();
             }
         });

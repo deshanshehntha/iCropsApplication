@@ -1,5 +1,7 @@
 package com.example.service_ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,10 +24,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.service_ui.constants.UriConstants;
+import com.example.service_ui.constants.Constants;
 import com.example.service_ui.model.OrderLine;
+import com.example.service_ui.model.Product;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -32,17 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewProductFragment extends Fragment {
-
     private EditText qtyText;
     private String productId;
+    private List<Product> products;
+    private SharedPreferences sharedpreferences;
 
-    private List<ProductEntry> products;
+    private BottomNavigationView bottomNavigationView;
 
     public ViewProductFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,28 +59,33 @@ public class ViewProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_view_product, container, false);
+        bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
+        sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String preferredSupermarketId = sharedpreferences.getString(Constants.SHARED_PREF_SUPERMARKET_ID, null);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
 
-        String url = UriConstants.HOST + UriConstants.PRODUCT_URI + "/" + productId;
+        String url = Constants.HOST + Constants.PRODUCT_URI + "/" + productId;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Gson gson = new Gson();
-                        ProductEntry productEntry = gson.fromJson(response, ProductEntry.class);
+                        Product product = gson.fromJson(response, Product.class);
                         TextView productTitle = view.findViewById(R.id.product_title_view);
-                        productTitle.setText(productEntry.productName);
+                        productTitle.setText(product.productName);
 
                         TextView productDescription = view.findViewById(R.id.product_description_view);
 
-                        if (productEntry.description != null &&
-                                !productEntry.description.isEmpty()) {
+                        if (product.description != null &&
+                                !product.description.isEmpty()) {
                             try {
-                                List<String> descriptions = gson.fromJson(productEntry.description, List.class);
+                                List<String> descriptions = gson.fromJson(product.description, List.class);
                                 if (descriptions.get(0).toCharArray().length > 100) {
                                     String substring = descriptions.get(0).substring(0,100) + "...";
                                     productDescription.setText(substring);
@@ -84,8 +93,8 @@ public class ViewProductFragment extends Fragment {
 
                             } catch (Exception e) {
                                 Log.d("Error", e.getLocalizedMessage());
-                                if (productEntry.description.toCharArray().length > 100) {
-                                    String substring = productEntry.description.substring(0,100) + "...";
+                                if (product.description.toCharArray().length > 100) {
+                                    String substring = product.description.substring(0,100) + "...";
                                     productDescription.setText(substring);
                                 }
                             }
@@ -93,9 +102,9 @@ public class ViewProductFragment extends Fragment {
                         }
 
                         TextView price = view.findViewById(R.id.product_price_view);
-                        price.setText(productEntry.price);
+                        price.setText(product.price);
 
-                        List<String> urls = gson.fromJson(productEntry.imageLink, List.class);
+                        List<String> urls = gson.fromJson(product.imageLink, List.class);
                         String url = urls.isEmpty() ? null : urls.get(0);
 
                         NetworkImageView image = view.findViewById(R.id.product_image);
@@ -110,12 +119,19 @@ public class ViewProductFragment extends Fragment {
                             public void onClick(View view) {
 
                                 OrderLine orderLine = new OrderLine();
-                                orderLine.setProductId(productEntry.productId);
+                                orderLine.setProductId(product.productId);
+                                orderLine.setProductName(product.productName);
+                                orderLine.setPrice(product.price);
                                 orderLine.setQuantity(qtyText.getText().toString());
-                                OrderedProductHolder.getInstance()
+                                OrderSingleton.getInstance()
                                         .setOrderLine(orderLine);
                                 qtyText.setText(qtyText.getText().toString());
                                 qtyText.setEnabled(false);
+
+                                BadgeDrawable badge = bottomNavigationView.getOrCreateBadge(R.id.orders_view);
+                                badge.setVisible(true, true);
+                                badge.setNumber(OrderSingleton.getInstance().getOrderLines().size());
+
                             }
                         });
 
@@ -142,7 +158,7 @@ public class ViewProductFragment extends Fragment {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
 
-        String url = UriConstants.HOST + UriConstants.PRODUCT_URI + "?supermarketId=" + supermarketId;
+        String url = Constants.HOST + Constants.PRODUCT_URI + "?supermarketId=" + supermarketId;
 
         products = new ArrayList<>();
 
@@ -159,13 +175,13 @@ public class ViewProductFragment extends Fragment {
                             List<String> urls = gson.fromJson(urlStrings, List.class);
                             String url = urls.isEmpty() ? null : urls.get(0);
 
-                            ProductEntry productEntry = new ProductEntry(
+                            Product product = new Product(
                                     linkedTreeMap.get("productName").toString(),url,
                                     linkedTreeMap.get("price").toString(),
                                     null,
                                     linkedTreeMap.get("productId").toString()
                             );
-                            products.add(productEntry);
+                            products.add(product);
                         }
 
                         recyclerView.setHasFixedSize(true);

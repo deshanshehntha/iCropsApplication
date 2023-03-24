@@ -4,33 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProductFragment">
+    tools:context=".ViewProductsFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/app_bar"
-            style="@style/Widget.Crops.Toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:visibility="visible"
-            app:navigationIcon="@drawable/crops_menu"
-            app:title="@string/crops_app_name"
-            tools:visibility="visible" />
-    </com.google.android.material.appbar.AppBarLayout>
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        app:tint="@null"
-        android:contentDescription="Submit"
-        app:maxImageSize="32dp"
-        android:src="@mipmap/empty_cart_round" />
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/app_bar"-->
+<!--            style="@style/Widget.Crops.Toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:visibility="visible"-->
+<!--            app:navigationIcon="@drawable/crops_menu"-->
+<!--            app:title="@string/crops_app_name"-->
+<!--            tools:visibility="visible" />-->
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end|bottom"-->
+<!--        android:layout_margin="16dp"-->
+<!--        app:tint="@null"-->
+<!--        android:contentDescription="Submit"-->
+<!--        app:maxImageSize="32dp"-->
+<!--        android:src="@mipmap/empty_cart_round" />-->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

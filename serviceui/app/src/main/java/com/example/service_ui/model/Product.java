@@ -1,17 +1,17 @@
-package com.example.service_ui;
+package com.example.service_ui.model;
 
 /**
  * A product entry in the list of products.
  */
-public class ProductEntry {
-    private static final String TAG = ProductEntry.class.getSimpleName();
+public class Product {
+    private static final String TAG = Product.class.getSimpleName();
     public final String productName;
     public final String imageLink;
     public final String price;
     public final String description;
     public final String productId;
 
-    public ProductEntry(
+    public Product(
             String productName, String imageLink, String price, String description, String productId) {
         this.productName = productName;
         this.imageLink = imageLink;

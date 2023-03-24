@@ -1,5 +1,9 @@
 package com.example.service_ui;
 
+import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_ID;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -17,7 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.service_ui.constants.UriConstants;
+import com.example.service_ui.constants.Constants;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,11 +38,17 @@ public class LoginFragment extends Fragment {
     private TextInputLayout usernameInput;
     private TextInputEditText passwordInputText;
     private TextInputEditText usernameInputText;
+    private SharedPreferences sharedpreferences;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        BottomNavigationView bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
+
+        sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         passwordInput = view.findViewById(R.id.password_input_wrapper);
         passwordInputText = view.findViewById(R.id.password_input_text);
@@ -52,11 +63,11 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
 
                 ((NavigationHost) getActivity())
-                        .navigateTo(new ProductFragment(), false);
+                        .navigateTo(new ViewProductsFragment(), "view_products");
 
-                Editable username = usernameInputText.getText();
-                Editable password = passwordInputText.getText();
-
+//                Editable username = usernameInputText.getText();
+//                Editable password = passwordInputText.getText();
+//
 //                if (isEmptyInputs(username, password)) {
 //                    passwordInput.setError(getString(R.string.crops_empty_password));
 //                    usernameInput.setError(getString(R.string.crops_empty_username));
@@ -91,7 +102,7 @@ public class LoginFragment extends Fragment {
 
     private void validateUserCredentials(Editable username, Editable password) {
 
-        String url = UriConstants.HOST + UriConstants.USER_VALIDATE_URI;
+        String url = Constants.HOST + Constants.USER_VALIDATE_URI;
 
         requestQueue = Volley.newRequestQueue(this.getContext());
 
@@ -118,14 +129,13 @@ public class LoginFragment extends Fragment {
                                 String name = user.getString("name");
 
                                 if ("CUSTOMER".equals(userType)) {
-                                    SetupSupermarketFragment setupSupermarketFragment = new SetupSupermarketFragment();
 
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("userId", userId);
-                                    setupSupermarketFragment.setArguments(bundle);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString(SHARED_PREF_USER_ID, userId);
+                                    editor.commit();
 
                                     ((NavigationHost) getActivity())
-                                            .navigateTo(setupSupermarketFragment, false);
+                                            .navigateTo(new SetupSupermarketFragment(), "setup_supermarket");
                                 }
                             } else {
                                 passwordInput.setError(getString(R.string.crops_invalid_credentials));

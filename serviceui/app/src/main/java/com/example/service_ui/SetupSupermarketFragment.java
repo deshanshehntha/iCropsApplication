@@ -1,5 +1,11 @@
 package com.example.service_ui;
 
+import static com.example.service_ui.constants.Constants.SHARED_PREF_SUPERMARKET_ID;
+import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_ID;
+import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_TYPE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.service_ui.constants.UriConstants;
+import com.example.service_ui.constants.Constants;
 import com.example.service_ui.model.Supermarket;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.gson.Gson;
@@ -28,20 +34,23 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SetupSupermarketFragment extends Fragment {
-
     private RequestQueue requestQueue;
     private List<Supermarket> supermarkets;
+    private SharedPreferences sharedpreferences;
+
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setup_supermarket, container, false);
 
-        Bundle bundle = getArguments();
-        String userId = bundle.getString("userId");
+        sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        String userId = sharedpreferences.getString(Constants.SHARED_PREF_USER_ID, null);
 
         requestQueue = Volley.newRequestQueue(this.getContext());
 
@@ -52,8 +61,7 @@ public class SetupSupermarketFragment extends Fragment {
 
     private void getCustomer(View view, String userId) {
 
-
-        String url = UriConstants.HOST + UriConstants.USER_CUSTOMER_GET_PATCH_URI + userId;
+        String url = Constants.HOST + Constants.USER_CUSTOMER_GET_PATCH_URI + userId;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -69,20 +77,16 @@ public class SetupSupermarketFragment extends Fragment {
                             String userType = user.getString("userType");
 
                             if (preferredSupermarket.equals("null")) {
-                                getSupermarkets(view, userId);
+                                getSupermarkets(view, userId, userType);
                             } else {
 
-                                ProductFragment productFragment = new ProductFragment();
-
-                                Bundle bundle = new Bundle();
-                                bundle.putString("preferredSupermarket", preferredSupermarket);
-                                bundle.putString("userId", userId);
-                                bundle.putString("userType", userType);
-
-                                productFragment.setArguments(bundle);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(SHARED_PREF_SUPERMARKET_ID, preferredSupermarket);
+                                editor.putString(SHARED_PREF_USER_TYPE, userType);
+                                editor.commit();
 
                                 ((NavigationHost) getActivity())
-                                        .navigateTo(productFragment, false);
+                                        .navigateTo(new ViewProductsFragment(), "view_products");
                             }
 
                         } catch (JSONException e) {
@@ -99,11 +103,11 @@ public class SetupSupermarketFragment extends Fragment {
     }
 
 
-    private void getSupermarkets(View view, String customerId) {
+    private void getSupermarkets(View view, String customerId, String userType) {
         supermarkets = new ArrayList<>();
 
         requestQueue = Volley.newRequestQueue(this.getContext());
-        String url = UriConstants.HOST + UriConstants.SUPERMARKET_URI;
+        String url = Constants.HOST + Constants.SUPERMARKET_URI;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -146,7 +150,7 @@ public class SetupSupermarketFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     Log.d("selected supermarket", supermarketBox.getTag().toString());
-                                    updateCustomerProfile(customerId, supermarketBox.getTag().toString());
+                                    updateCustomerProfile(customerId, supermarketBox.getTag().toString(), userType);
                                 }
                             });
 
@@ -163,9 +167,9 @@ public class SetupSupermarketFragment extends Fragment {
         requestQueue.add(request);
     }
 
-    private void updateCustomerProfile(String userId, String supermarketId) {
+    private void updateCustomerProfile(String userId, String supermarketId, String userType) {
 
-        String url = UriConstants.HOST + UriConstants.USER_CUSTOMER_GET_PATCH_URI + userId;
+        String url = Constants.HOST + Constants.USER_CUSTOMER_GET_PATCH_URI + userId;
 
         JSONObject object = new JSONObject();
         try {
@@ -179,16 +183,13 @@ public class SetupSupermarketFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        ProductFragment productFragment = new ProductFragment();
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("preferredSupermarket", supermarketId);
-                        bundle.putString("userId", userId);
-
-                        productFragment.setArguments(bundle);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(SHARED_PREF_SUPERMARKET_ID, supermarketId);
+                        editor.putString(SHARED_PREF_USER_TYPE, userType);
+                        editor.commit();
 
                         ((NavigationHost) getActivity())
-                                .navigateTo(productFragment, false);
+                                .navigateTo(new ViewProductsFragment(),"view_products");
                     }
                 }, new Response.ErrorListener() {
             @Override

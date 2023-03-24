@@ -19,5 +19,7 @@
     <string name="product_title">Product</string>
     <string name="product_price">Price</string>
     <string name="setup_supermarket_title">Select a convenient supermarket of your choice</string>
+    <string name="home">Home</string>
+    <string name="orders">Orders</string>
 
 </resources>

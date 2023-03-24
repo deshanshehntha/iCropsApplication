@@ -5,19 +5,19 @@ import com.example.service_ui.model.OrderLine;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderedProductHolder {
+public class OrderSingleton {
 
-    private static OrderedProductHolder INSTANCE = null;
+    private static OrderSingleton INSTANCE = null;
     private static List<OrderLine> orderLines;
 
-    private OrderedProductHolder() {
+    private OrderSingleton() {
     }
-    public static OrderedProductHolder getInstance() {
+    public static OrderSingleton getInstance() {
         if (INSTANCE == null) {
-            synchronized (OrderedProductHolder.class) {
+            synchronized (OrderSingleton.class) {
                 if (INSTANCE == null) {
                     orderLines = new ArrayList<>();
-                    INSTANCE = new OrderedProductHolder();
+                    INSTANCE = new OrderSingleton();
                 }
             }
         }

@@ -1,22 +1,21 @@
 package com.example.service_ui;
 
+import static android.provider.Settings.System.getString;
+
+import static com.example.service_ui.constants.Constants.MENU_ITEM_HOME;
+import static com.example.service_ui.constants.Constants.MENU_ITEM_ORDERS;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -25,22 +24,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.service_ui.constants.UriConstants;
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.service_ui.constants.Constants;
+import com.example.service_ui.model.Product;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
-public class ProductFragment extends Fragment {
+public class ViewProductsFragment extends Fragment {
     private RequestQueue requestQueue;
-    private List<ProductEntry> products;
+    private List<Product> products;
+
+    private SharedPreferences sharedpreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,44 +50,28 @@ public class ProductFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-        //Add supermarket products here
-        String preferredSupermarketId = "641367ea3a921d2f1fb91e0f";
-
-        View view = inflater.inflate(R.layout.fragment_product, container, false);
+        View view = inflater.inflate(R.layout.fragment_view_products, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 
-        FloatingActionButton floatingActionButton = view.findViewById(R.id.fab);
-        if (!OrderedProductHolder.getInstance().getOrderLines().isEmpty()) {
-            floatingActionButton.setImageResource(R.drawable.full_cart_foreground);
-        }
+        sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String preferredSupermarketId = sharedpreferences.getString(Constants.SHARED_PREF_SUPERMARKET_ID, null);
 
-        setUpToolbar(view);
+
+
+        BottomNavigationView bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
 
         buildProductGrid(preferredSupermarketId, recyclerView);
 
         return view;
     }
 
-    private void setUpToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.app_bar);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity != null) {
-            activity.setSupportActionBar(toolbar);
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu, menuInflater);
-    }
 
     private void buildProductGrid(String supermarketId, RecyclerView recyclerView) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
 
-        String url = UriConstants.HOST + UriConstants.PRODUCT_URI + "?supermarketId=" + supermarketId;
+        String url = Constants.HOST + Constants.PRODUCT_URI + "?supermarketId=" + supermarketId;
 
         products = new ArrayList<>();
 
@@ -106,13 +88,13 @@ public class ProductFragment extends Fragment {
                             List<String> urls = gson.fromJson(urlStrings, List.class);
                             String url = urls.isEmpty() ? null : urls.get(0);
 
-                            ProductEntry productEntry = new ProductEntry(
+                            Product product = new Product(
                                     linkedTreeMap.get("productName").toString(),url,
                                     linkedTreeMap.get("price").toString(),
                                     null,
                                     linkedTreeMap.get("productId").toString()
                             );
-                            products.add(productEntry);
+                            products.add(product);
                         }
 
                         recyclerView.setHasFixedSize(true);
