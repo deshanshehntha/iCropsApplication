@@ -1,8 +1,9 @@
 package com.example.servicebackend.dto.actor;
 
-import com.example.servicebackend.dto.Supermarket;
+import lombok.Data;
 
+@Data
 public class Manager extends User {
 
-    private Supermarket supermarket;
+    private String supermarketId;
 }

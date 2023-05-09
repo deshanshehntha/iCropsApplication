@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sup_home"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/sup_order_lines"
+        android:enabled="true"
+        android:icon="@drawable/baseline_reorder_24"
+        android:title="@string/order_lines"/>
+</menu>

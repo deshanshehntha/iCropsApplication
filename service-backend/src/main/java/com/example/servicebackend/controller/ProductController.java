@@ -1,6 +1,8 @@
 package com.example.servicebackend.controller;
 
 import com.example.servicebackend.constants.Response;
+import com.example.servicebackend.dto.product.ExplanationReqDTO;
+import com.example.servicebackend.dto.product.ExplanationResDTO;
 import com.example.servicebackend.dto.product.Product;
 import com.example.servicebackend.service.CSVReaderTest;
 import com.example.servicebackend.service.ProductService;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.interfaces.EdECKey;
 import java.util.List;
 
 @AllArgsConstructor
@@ -27,7 +30,8 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity getProduct(@PathVariable String id) {
-        Product product = productService.getProductById(id);
+        //Todo
+        Product product = productService.getProductById(id, true);
         return ResponseEntity.ok(product);
     }
 
@@ -41,5 +45,13 @@ public class ProductController {
     public ResponseEntity synProductDetails() {
         csvReaderTest.syncData();
         return ResponseEntity.ok("Started");
+    }
+
+    @PostMapping("products/exp")
+    public ResponseEntity getRecommendationExplanations(@RequestBody ExplanationReqDTO explanationReqDTO) {
+        ExplanationResDTO explanationResDTO =
+                productService.getRecommendationExplanation(explanationReqDTO);
+
+        return ResponseEntity.ok(explanationResDTO);
     }
 }

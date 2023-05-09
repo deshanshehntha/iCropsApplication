@@ -1,15 +1,9 @@
 package com.example.service_ui;
 
-import static android.provider.Settings.System.getString;
-
-import static com.example.service_ui.constants.Constants.MENU_ITEM_HOME;
-import static com.example.service_ui.constants.Constants.MENU_ITEM_ORDERS;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,8 +31,10 @@ import java.util.List;
 public class ViewProductsFragment extends Fragment {
     private RequestQueue requestQueue;
     private List<Product> products;
-
     private SharedPreferences sharedpreferences;
+    private View view;
+    private View layout_pending, layout_screen;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,28 +46,22 @@ public class ViewProductsFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_view_products, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        view = inflater.inflate(R.layout.fragment_view_products, container, false);
+
+        layout_pending = view.findViewById(R.id.layout1);
+        layout_screen = view.findViewById(R.id.layout2);
+        layout_screen.setVisibility(View.GONE);
+        layout_pending.setVisibility(View.VISIBLE);
 
         sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String preferredSupermarketId = sharedpreferences.getString(Constants.SHARED_PREF_SUPERMARKET_ID, null);
 
-
-
-        BottomNavigationView bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = container.findViewById(R.id.mgr_bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
-
-        buildProductGrid(preferredSupermarketId, recyclerView);
-
-        return view;
-    }
-
-
-    private void buildProductGrid(String supermarketId, RecyclerView recyclerView) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
 
-        String url = Constants.HOST + Constants.PRODUCT_URI + "?supermarketId=" + supermarketId;
+        String url = Constants.HOST + Constants.PRODUCT_URI + "?supermarketId=" + preferredSupermarketId;
 
         products = new ArrayList<>();
 
@@ -79,6 +69,12 @@ public class ViewProductsFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        layout_pending.setVisibility(View.GONE);
+                        layout_screen.setVisibility(View.VISIBLE);
+
+
+                        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+
                         Gson gson = new Gson();
                         List<LinkedTreeMap> productMap = gson.fromJson(response, List.class);
 
@@ -92,18 +88,23 @@ public class ViewProductsFragment extends Fragment {
                                     linkedTreeMap.get("productName").toString(),url,
                                     linkedTreeMap.get("price").toString(),
                                     null,
-                                    linkedTreeMap.get("productId").toString()
-                            );
+                                    linkedTreeMap.get("productId").toString(),
+                                    null);
                             products.add(product);
                         }
 
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
-                        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(products, getActivity());
+                        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(products, getActivity(), false, null);
                         recyclerView.setAdapter(adapter);
                         int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
                         int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
                         recyclerView.addItemDecoration(new ProductGridItemDecoration(largePadding, smallPadding));
+
+                        BottomNavigationView bottomNavigationView =
+                                container.findViewById(R.id.cus_bottom_navigation);
+                        bottomNavigationView.setVisibility(View.VISIBLE);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -112,6 +113,9 @@ public class ViewProductsFragment extends Fragment {
         });
 
         requestQueue.add(request);
+
+        return view;
+
     }
 
 }

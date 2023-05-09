@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="order_status">
+        <item>PENDING</item>
+        <item>IN_PROGRESS</item>
+        <item>IN_TRANSIT</item>
+        <item>READY</item>
+        <item>COMPLETED</item>
+    </string-array>
+</resources>

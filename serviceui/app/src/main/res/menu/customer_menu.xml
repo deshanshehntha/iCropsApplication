@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home_view"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/cart_view"
+        android:enabled="true"
+        android:icon="@drawable/baseline_shopping_cart_24"
+        android:title="@string/cart"/>
+    <item
+        android:id="@+id/orders_view"
+        android:enabled="true"
+        android:icon="@drawable/baseline_reorder_24"
+        android:title="@string/orders"/>
+</menu>

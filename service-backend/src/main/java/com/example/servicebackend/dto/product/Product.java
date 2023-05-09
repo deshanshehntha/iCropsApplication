@@ -5,6 +5,8 @@ import com.example.servicebackend.dto.actor.Supplier;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
+
 @Data
 public class Product {
 
@@ -17,4 +19,6 @@ public class Product {
     private String category;
     private String price;
     private SupplierProductRelationship supplier;
+    private List<Product> recommendedProducts;
+
 }

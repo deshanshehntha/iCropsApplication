@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -64,6 +65,29 @@ public class OrderService {
         return order;
     }
 
+    public List<Order> getOrdersByUserId(String userId) {
+        List<Order> orders = orderDAO.getOrdersByUserId(userId);
+
+        for (Order order: orders) {
+            List<OrderLine> orderLines = orderLineDAO.getOrderLinesByOrderId(order.getOrderId());
+            order.setOrderLines(orderLines);
+        }
+
+        return orders;
+    }
+
+    public List<Order> getOrdersBySupermarketId(String supermarketId) {
+        List<Order> orders = orderDAO.getOrdersBySupermarketId(supermarketId);
+
+        for (Order order: orders) {
+            List<OrderLine> orderLines = orderLineDAO.getOrderLinesByOrderId(order.getOrderId());
+            order.setOrderLines(orderLines);
+        }
+
+        return orders;
+    }
+
+
     public List<OrderLine> getOrderLinesBySupplierId(String supplierId) {
         return orderLineDAO.getOrderLinesBySupplierId(supplierId);
     }
@@ -84,6 +108,7 @@ public class OrderService {
         BeanUtils.copyProperties(receivedOrder, clonedOrder);
         clonedOrder.setOrderLines(null);
         clonedOrder.setOrderStatus(OrderStatus.PENDING);
+        clonedOrder.setOrderedDate(LocalDateTime.now());
 
         receivedOrder.getOrderLines().forEach(orderLine -> orderLine.setOrderStatus(OrderStatus.PENDING));
 

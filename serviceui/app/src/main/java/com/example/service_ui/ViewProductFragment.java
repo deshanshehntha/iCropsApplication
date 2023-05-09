@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -31,9 +29,7 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewProductFragment extends Fragment {
@@ -41,8 +37,10 @@ public class ViewProductFragment extends Fragment {
     private String productId;
     private List<Product> products;
     private SharedPreferences sharedpreferences;
-
     private BottomNavigationView bottomNavigationView;
+    private View layout_pending, layout_screen;
+    private View view;
+
 
     public ViewProductFragment() {
         // Required empty public constructor
@@ -59,9 +57,14 @@ public class ViewProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_view_product, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_view_product, container, false);
-        bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        layout_pending = view.findViewById(R.id.layout1);
+        layout_screen = view.findViewById(R.id.layout2);
+        layout_screen.setVisibility(View.GONE);
+        layout_pending.setVisibility(View.VISIBLE);
+
+        bottomNavigationView = container.findViewById(R.id.cus_bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
 
         sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -79,6 +82,13 @@ public class ViewProductFragment extends Fragment {
                         Product product = gson.fromJson(response, Product.class);
                         TextView productTitle = view.findViewById(R.id.product_title_view);
                         productTitle.setText(product.productName);
+
+                        if (product.productName.toCharArray().length > 20) {
+                            String substring = product.productName.substring(0,20) + "...";
+                            productTitle.setText(substring);
+                        } else {
+                            productTitle.setText(product.productName);
+                        }
 
                         TextView productDescription = view.findViewById(R.id.product_description_view);
 
@@ -128,18 +138,17 @@ public class ViewProductFragment extends Fragment {
                                 qtyText.setText(qtyText.getText().toString());
                                 qtyText.setEnabled(false);
 
-                                BadgeDrawable badge = bottomNavigationView.getOrCreateBadge(R.id.orders_view);
-                                badge.setVisible(true, true);
+                                BadgeDrawable badge = bottomNavigationView.getOrCreateBadge(R.id.cart_view);
+                                badge.setVisible(true, false);
                                 badge.setNumber(OrderSingleton.getInstance().getOrderLines().size());
-
+                                badge.setBadgeGravity(BadgeDrawable.TOP_END);
                             }
                         });
 
                         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
                         String preferredSupermarketId = "641367ea3a921d2f1fb91e0f";
 
-
-                        buildProductGrid(preferredSupermarketId, recyclerView);
+                        buildProductGrid(product.recommendedProducts, recyclerView);
 
                     }
                 }, new Response.ErrorListener() {
@@ -154,50 +163,16 @@ public class ViewProductFragment extends Fragment {
         return view;
     }
 
-    private void buildProductGrid(String supermarketId, RecyclerView recyclerView) {
+    private void buildProductGrid(List<Product> products, RecyclerView recyclerView) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
+        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(products, getActivity(), true, productId);
+        recyclerView.setAdapter(adapter);
+        int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
+        int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
+        recyclerView.addItemDecoration(new ProductGridItemDecoration(largePadding, smallPadding));
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
-
-        String url = Constants.HOST + Constants.PRODUCT_URI + "?supermarketId=" + supermarketId;
-
-        products = new ArrayList<>();
-
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Gson gson = new Gson();
-                        List<LinkedTreeMap> productMap = gson.fromJson(response, List.class);
-
-                        for (LinkedTreeMap linkedTreeMap : productMap) {
-
-                            String urlStrings = linkedTreeMap.get("imageLink").toString();
-                            List<String> urls = gson.fromJson(urlStrings, List.class);
-                            String url = urls.isEmpty() ? null : urls.get(0);
-
-                            Product product = new Product(
-                                    linkedTreeMap.get("productName").toString(),url,
-                                    linkedTreeMap.get("price").toString(),
-                                    null,
-                                    linkedTreeMap.get("productId").toString()
-                            );
-                            products.add(product);
-                        }
-
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1, GridLayoutManager.HORIZONTAL, false));
-                        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(products, getActivity());
-                        recyclerView.setAdapter(adapter);
-                        int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
-                        int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
-                        recyclerView.addItemDecoration(new ProductGridItemDecoration(largePadding, smallPadding));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-
-        requestQueue.add(request);
+        layout_pending.setVisibility(View.GONE);
+        layout_screen.setVisibility(View.VISIBLE);
     }
 }

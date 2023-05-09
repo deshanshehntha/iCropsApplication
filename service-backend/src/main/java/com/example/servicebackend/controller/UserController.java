@@ -60,11 +60,20 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/user/manager/{userId}")
+    public ResponseEntity getManager(@PathVariable String userId) {
+        Manager manager = userService.getManagerByUserId(userId);
+        return ResponseEntity.ok(manager);
+    }
+
+
     @PatchMapping("/user/validate")
     public ResponseEntity validateUser(@RequestBody User user) {
-        UserValidationDTO userValidationDTO = userService.getValidUserByUsernameAndPassword(user.getUserName(),
+        UserValidationDTO userValidationDTO =
+                userService.getValidUserByUsernameAndPassword(user.getUserName(),
                 user.getPassword());
         return ResponseEntity.ok(userValidationDTO);
     }
+
 
 }

@@ -1,6 +1,8 @@
 package com.example.service_ui;
 
+import static com.example.service_ui.constants.Constants.SHARED_PREF_SUPERMARKET_ID;
 import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_ID;
+import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_TYPE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginFragment extends Fragment {
-
     private RequestQueue requestQueue;
     private JsonObjectRequest jsonObjectRequest;
     private TextInputLayout passwordInput;
@@ -43,10 +44,17 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        BottomNavigationView bottomNavigationView = container.findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = container.findViewById(R.id.mgr_bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
+
+        BottomNavigationView customerNav = container.findViewById(R.id.cus_bottom_navigation);
+        customerNav.setVisibility(View.GONE);
+
+        BottomNavigationView supNav = container.findViewById(R.id.sup_bottom_navigation);
+        supNav.setVisibility(View.GONE);
 
         sharedpreferences = getActivity().getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -62,18 +70,18 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                ((NavigationHost) getActivity())
-                        .navigateTo(new ViewProductsFragment(), "view_products");
+//                ((NavigationHost) getActivity())
+//                        .navigateTo(new ViewProductsFragment(), "view_products");
 
-//                Editable username = usernameInputText.getText();
-//                Editable password = passwordInputText.getText();
-//
-//                if (isEmptyInputs(username, password)) {
-//                    passwordInput.setError(getString(R.string.crops_empty_password));
-//                    usernameInput.setError(getString(R.string.crops_empty_username));
-//                } else {
-//                    validateUserCredentials(username, password);
-//                }
+                Editable username = usernameInputText.getText();
+                Editable password = passwordInputText.getText();
+
+                if (isEmptyInputs(username, password)) {
+                    passwordInput.setError(getString(R.string.crops_empty_password));
+                    usernameInput.setError(getString(R.string.crops_empty_username));
+                } else {
+                    validateUserCredentials(username, password);
+                }
             }
         });
 
@@ -127,15 +135,36 @@ public class LoginFragment extends Fragment {
                                 String userId = user.getString("userId");
                                 String userType = user.getString("userType");
                                 String name = user.getString("name");
+                                String supermarketId = user.getString("supermarketId");
 
                                 if ("CUSTOMER".equals(userType)) {
 
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.putString(SHARED_PREF_USER_ID, userId);
+                                    editor.putString(SHARED_PREF_USER_TYPE, userType);
                                     editor.commit();
 
                                     ((NavigationHost) getActivity())
                                             .navigateTo(new SetupSupermarketFragment(), "setup_supermarket");
+                                } else if ("MANAGER".equals(userType)) {
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString(SHARED_PREF_USER_ID, userId);
+                                    editor.putString(SHARED_PREF_USER_TYPE, userType);
+                                    editor.putString(SHARED_PREF_SUPERMARKET_ID, supermarketId);
+
+                                    editor.commit();
+
+                                    ((NavigationHost) getActivity())
+                                            .navigateTo(new SummaryFragment(), "mgr_orders_frag");
+                                } else if ("SUPPLIER".equals(userType)) {
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString(SHARED_PREF_USER_ID, userId);
+                                    editor.putString(SHARED_PREF_USER_TYPE, userType);
+
+                                    editor.commit();
+
+                                    ((NavigationHost) getActivity())
+                                            .navigateTo(new SummaryFragment(), "sup_orders_frag");
                                 }
                             } else {
                                 passwordInput.setError(getString(R.string.crops_invalid_credentials));

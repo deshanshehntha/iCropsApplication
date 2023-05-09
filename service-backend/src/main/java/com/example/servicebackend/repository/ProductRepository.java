@@ -13,4 +13,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     @Query(value = "{ 'productId' : { $in : ?0 } }")
     List<Product> getProductsByProductIds(List<String> productIds);
 
+    @Query(value = "{ 'externalIdentifier' : { $in : ?0 } }")
+    List<Product> getProductsByExternalIds(List<String> asins);
+
 }

@@ -13,7 +13,9 @@ public class OrderLine {
     private String orderLineId;
     private String orderId;
     private String productId;
+    private String productName;
     private double quantity;
     private String supplierId;
+    private String price;
     private OrderStatus orderStatus;
 }

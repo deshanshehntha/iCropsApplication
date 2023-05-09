@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@android:color/white"
     app:cardElevation="2dp"
+    android:background="@color/cardview_dark_background"
     app:cardPreventCornerOverlap="true">
 
     <LinearLayout
@@ -33,7 +34,7 @@
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
-                android:id="@+id/product_price"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/crops_product_description"

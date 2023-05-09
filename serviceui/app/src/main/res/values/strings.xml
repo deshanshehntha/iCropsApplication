@@ -21,5 +21,6 @@
     <string name="setup_supermarket_title">Select a convenient supermarket of your choice</string>
     <string name="home">Home</string>
     <string name="orders">Orders</string>
-
+    <string name="cart">Cart</string>
+    <string name="order_lines">Order Lines</string>
 </resources>

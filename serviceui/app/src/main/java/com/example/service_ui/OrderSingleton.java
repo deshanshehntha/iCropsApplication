@@ -32,4 +32,8 @@ public class OrderSingleton {
         orderLines.removeIf(ordLine -> ordLine.getProductId().equals(orderLine.getProductId()));
         orderLines.add(orderLine);
     }
+
+    public void clearOrderLines() {
+        orderLines.clear();
+    }
 }

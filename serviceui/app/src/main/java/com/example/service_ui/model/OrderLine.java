@@ -1,6 +1,26 @@
 package com.example.service_ui.model;
 
 public class OrderLine {
+
+    public String getOrderLineId() {
+        return orderLineId;
+    }
+
+    public void setOrderLineId(String orderLineId) {
+        this.orderLineId = orderLineId;
+    }
+
+    private String orderLineId;
+
+    public String getOrderLineStatus() {
+        return orderLineStatus;
+    }
+
+    public void setOrderLineStatus(String orderLineStatus) {
+        this.orderLineStatus = orderLineStatus;
+    }
+
+    private String orderLineStatus;
     private String productId;
     private String productName;
     private String price;

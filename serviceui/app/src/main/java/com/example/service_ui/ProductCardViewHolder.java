@@ -1,37 +1,60 @@
 package com.example.service_ui;
 
-import static com.example.service_ui.constants.Constants.SHARED_PREF_SUPERMARKET_ID;
-import static com.example.service_ui.constants.Constants.SHARED_PREF_USER_TYPE;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.android.material.checkbox.MaterialCheckBox;
 
 public class ProductCardViewHolder extends RecyclerView.ViewHolder {
-
     public NetworkImageView productImage;
     public TextView productTitle;
     public TextView productPrice;
     private FragmentActivity fragmentActivity;
     public String productId;
+    private boolean isSingleView;
+    public String comparedProdId;
 
-    public ProductCardViewHolder(@NonNull View itemView, FragmentActivity fragmentActivity) {
+
+    public ProductCardViewHolder(@NonNull View itemView,
+                                 FragmentActivity fragmentActivity,
+                                 boolean isSingleView, String comparedProdId) {
         super(itemView);
         this.fragmentActivity = fragmentActivity;
+        this.isSingleView = isSingleView;
         productImage = itemView.findViewById(R.id.product_image);
         productTitle = itemView.findViewById(R.id.product_title);
-        productPrice = itemView.findViewById(R.id.product_price);
+        productPrice = itemView.findViewById(R.id.description);
+
+        if (isSingleView) {
+            this.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    fragmentActivity.getSupportFragmentManager().popBackStack();
+
+                    ExplanationFragment explanationFragment =
+                            getRecommendationExplanationFragment(comparedProdId, productId);
+
+
+                    FragmentTransaction transaction =
+                            fragmentActivity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.container, explanationFragment);
+                    fragmentActivity.getSupportFragmentManager().popBackStack();
+
+                    transaction.addToBackStack("rec_explanation");
+                    transaction.commit();
+                    return true;
+                }
+            });
+        }
+
         this.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,8 +66,6 @@ public class ProductCardViewHolder extends RecyclerView.ViewHolder {
                         fragmentActivity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.container, viewProductFragment);
-
-                transaction.addToBackStack("product_view");
                 transaction.commit();
             }
         });
@@ -59,4 +80,13 @@ public class ProductCardViewHolder extends RecyclerView.ViewHolder {
         return fragment;
     }
 
+
+    private ExplanationFragment getRecommendationExplanationFragment(String currentProdId, String recProdId) {
+        ExplanationFragment fragment = new ExplanationFragment();
+        Bundle args = new Bundle();
+        args.putString("currentProdId", currentProdId);
+        args.putString("recProdId", recProdId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 }

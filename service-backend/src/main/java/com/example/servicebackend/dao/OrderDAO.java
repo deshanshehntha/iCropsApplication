@@ -30,5 +30,14 @@ public class OrderDAO {
         return orderRepository.findByOrderId(id);
     }
 
+    public List<Order> getOrdersByUserId(String userId) {
+        return orderRepository.findByCreateUserId(userId);
+    }
+
+    public List<Order> getOrdersBySupermarketId(String supermarketId) {
+        return orderRepository.findBySupermarketId(supermarketId);
+    }
+
+
 
 }

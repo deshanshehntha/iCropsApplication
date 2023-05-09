@@ -20,18 +20,25 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
     private List<Product> productList;
     private ImageRequester imageRequester;
     private FragmentActivity fragmentActivity;
+    private boolean isSingleView;
+    private String comparedProdId = null;
 
-    ProductCardRecyclerViewAdapter(List<Product> productList, FragmentActivity fragmentActivity) {
+    ProductCardRecyclerViewAdapter(List<Product> productList,
+                                   FragmentActivity fragmentActivity,
+                                   boolean isSingleView,
+                                   String currentProdId) {
         this.productList = productList;
         imageRequester = ImageRequester.getInstance();
         this.fragmentActivity = fragmentActivity;
+        this.isSingleView = isSingleView;
+        this.comparedProdId = currentProdId;
     }
 
     @NonNull
     @Override
     public ProductCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
-        return new ProductCardViewHolder(layoutView, this.fragmentActivity);
+        return new ProductCardViewHolder(layoutView, this.fragmentActivity, this.isSingleView, comparedProdId);
     }
 
 
@@ -39,7 +46,14 @@ public class ProductCardRecyclerViewAdapter extends RecyclerView.Adapter<Product
     public void onBindViewHolder(@NonNull ProductCardViewHolder holder, int position) {
         if (productList != null && position < productList.size()) {
             Product product = productList.get(position);
-            holder.productTitle.setText(product.productName);
+
+            if (product.productName.toCharArray().length > 20) {
+                String substring = product.productName.substring(0,20) + "...";
+                holder.productTitle.setText(substring);
+            } else {
+                holder.productTitle.setText(product.productName);
+            }
+
             holder.productPrice.setText(product.price);
             holder.productId = product.productId;
             imageRequester.setImageFromUrl(holder.productImage, product.imageLink);
