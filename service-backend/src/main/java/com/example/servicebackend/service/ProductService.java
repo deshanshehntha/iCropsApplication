@@ -151,6 +151,12 @@ public class ProductService {
 
     public ExplanationResDTO getRecommendationExplanation(ExplanationReqDTO explanationReqDTO) {
 
+        Product initialProd = productRepository.getProductByProductId(explanationReqDTO.getInitialAsin());
+        Product recommendedProd = productRepository.getProductByProductId(explanationReqDTO.getRecAsin());
+
+        explanationReqDTO.setInitialAsin(initialProd.getExternalIdentifier());
+        explanationReqDTO.setRecAsin(recommendedProd.getExternalIdentifier());
+
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<ExplanationReqDTO> entity =
