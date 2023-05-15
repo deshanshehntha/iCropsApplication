@@ -29,90 +29,90 @@
 
 
             <LinearLayout
-                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <LinearLayout
-                    android:padding="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:id="@+id/posTitleText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text="Positive reviews"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/posText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text=""
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:padding="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:id="@+id/negTitleText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text="Negative reviews"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/negText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text=""
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:padding="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <TextView
                         android:id="@+id/compTitleText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text="Comparison of simmilar features"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/compText"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
                         android:text=""
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
